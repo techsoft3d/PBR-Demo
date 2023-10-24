@@ -33,12 +33,12 @@
                 </div>
                 <div id="modelOptions">
                         <div class="modelOption">
-                                <img src="data/img/_micro_engine.png" alt="Micro Engine" class="modelImg"
+                                <img src="data/img/microengine.png" alt="Micro Engine" class="modelImg"
                                         id="microengineLink" />
                                 <h3>Microengine (CATIA V5)</h3>
                         </div>
                         <div class="modelOption">
-                                <img src="data/img/_MOTO_X.png" alt="Motorcycle" class="modelImg" id="motoLink" />
+                                <img src="data/img/MOTOX.png" alt="Motorcycle" class="modelImg" id="motoLink" />
                                 <h3>Motorcycle (ProE)</h3>
                         </div>
                         <div class="modelOption">
@@ -457,7 +457,7 @@
 
                         hwv = new Communicator.WebViewer({
                                 containerId: "viewer",
-                                endpointUri: "data/_micro_engine.scs"
+                                endpointUri: "data/microengine.scs"
                         });
 
                         //hwv.model.setEnableAutomaticUnitScaling(false); //use to get camera position for conversion output png
@@ -768,10 +768,10 @@
 
                                         switch (modelId) {
                                                 case "microengineLink":
-                                                        modelUrl = "_micro_engine";
+                                                        modelUrl = "microengine";
                                                         break;
                                                 case "motoLink":
-                                                        modelUrl = "_MOTO_X";
+                                                        modelUrl = "MOTOX";
                                                         break;
                                                 case "roverLink":
                                                         modelUrl = "scene";
