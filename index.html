@@ -457,7 +457,7 @@
 
                         hwv = new Communicator.WebViewer({
                                 containerId: "viewer",
-                                endpointUri: "./data/_micro engine.scs"
+                                endpointUri: "data/_micro engine.scs"
                         });
 
                         //hwv.model.setEnableAutomaticUnitScaling(false); //use to get camera position for conversion output png
@@ -593,7 +593,7 @@
 
                                         // set default ibl environment:
 
-                                        const defaultIblFile = './img/cape_hill.ktx2';
+                                        const defaultIblFile = 'img/cape_hill.ktx2';
                                         document.getElementById('iblEnv').value = 'hill';
                                         setIblEnvironment(defaultIblFile);
 
@@ -1085,16 +1085,16 @@
                                         hwv.view.setImageBasedLightingEnabled(true);
                                         switch (iblEnvironment) {
                                                 case "warehouse":
-                                                        iblFile = './img/warehouse.ktx2';
+                                                        iblFile = 'img/warehouse.ktx2';
                                                         break;
                                                 case "field":
-                                                        iblFile = './img/hillside.ktx2';
+                                                        iblFile = 'img/hillside.ktx2';
                                                         break;
                                                 case "studio":
-                                                        iblFile = './img/studio.ktx2';
+                                                        iblFile = 'img/studio.ktx2';
                                                         break;
                                                 case "hill":
-                                                        iblFile = './img/cape_hill.ktx2';
+                                                        iblFile = 'img/cape_hill.ktx2';
                                                         break;
 
 
