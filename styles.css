@@ -1,0 +1,307 @@
+a {
+    all: unset;
+}
+
+
+body{
+    display: flex;
+    width: 100vw;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    font-family: 'Open Sans', Arial, Helvetica, sans-serif;
+}
+
+#viewer {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+}
+
+#main_container {
+    position: absolute;
+    z-index: 1;
+}
+
+#toolbar {
+    position: absolute;
+    margin: 0 auto;
+    bottom: 20px;
+    width: 50vw;
+    height: 60px;
+    /*border: solid 1px red;*/
+    z-index: 1;
+    display: flex; 
+    align-items: center;
+    justify-content: center; 
+    padding: 5px;             
+}
+
+.toolBtn {
+    width: 80px;
+    height: 50px;
+    
+    font-size: 14px;
+    justify-content: center;
+    align-items: center;
+    display: flex;
+    text-align: center;
+    font-family: 'Open Sans', Arial, Helvetica, sans-serif;
+    font-weight: bold;
+    border: 3px solid rgb(200,200,200);
+    border-radius: 15px;
+    color: rgb(200,200,200);
+    margin: 5px;
+    padding: 5px;
+    min-width: 40px;
+    transition: color 1s, border-color 1s, background-color 0.3s;
+}
+
+.toolBtn:hover {
+    cursor: pointer;
+    color: white;
+    border-color: white;
+    background-color: rgba(255,255,255,0.2);
+    transition: color 1s, border-color 1s, background-color 0.2s;
+}
+
+@media screen and (max-width: 800px) {
+    .toolBtn {
+      font-size: 10px;
+    }
+  }
+
+@media screen and (max-width: 1200px) {
+    #toolbar {
+        width: 80vw;
+    }
+  }
+
+.activeBtn {
+    background-color: white;
+    color: rgb(100,100,100);
+}
+
+#pallet_container {
+    position: absolute;
+    background-color: rgba(255,255,255,0.9);
+    left: 20px;
+    top: 40px;
+    border-radius: 20px;
+    box-shadow: 5px 5px 15px black;
+    
+}
+.pallet { 
+    display: none;
+    
+    margin: 20px;
+    
+}
+
+
+
+#lightPallet {
+    padding: 10px;
+}
+
+#lightPallet input {
+    margin: 10px;
+}
+
+.pbrNote {
+    font-size: 11px;
+    font-style: italic;
+}
+
+table td {
+    padding: 5px 5px;
+}
+
+#lightTable td {
+    padding: 0px 5px;
+}
+#lightTable {
+    margin-bottom: 50px;
+}
+
+#topLeft {
+    position: absolute;
+    margin: 0 auto;
+    padding: 0px;
+    top: 15px;
+    right: 15px;
+    text-align: right;
+}
+
+
+
+#handleButton {
+    margin: 20px 0px 10px 0px;
+    padding: 10px 15px;
+    background-color: transparent;
+    border: 2px solid black;
+    border-radius: 10px;
+    font-family: Arial, Helvetica, sans-serif;
+    display: none; /* not used */
+}
+
+#handleButton:hover {
+    background-color: rgba(100,255,255,0.5);
+    cursor: pointer;
+}
+
+.smallNote { 
+    font-style: italic;
+    font-size: 14px;
+}
+
+#loadButton, #chooseModelBtn {
+    background-color: rgba(220,220,220,1);
+    padding: 8px 15px;
+    font-family: Arial, Helvetica, sans-serif;
+    box-shadow: 1px 1px 5px black;
+    border: none;
+    border-radius: 10px;
+}
+
+#loadButton:hover, #chooseModelBtn:hover {
+    background-color: rgba(255,255,255,1);
+    cursor: pointer;
+}
+
+.toolTip {
+    all: unset;
+    display: none;
+    position: absolute;
+    background-color: rgba(255,255,255,0.9);
+    color: black;
+    font-size: 12px;
+    width: 300px;
+    height: 100px;
+    bottom: 100px;
+    height: fit-content;
+    border-radius: 20px;
+    padding: 10px;
+}
+
+.bold {
+    font-weight: bold;
+}
+
+.toolTip p {
+    text-align: left;
+    margin: 5px;
+    font-weight: normal;
+}
+
+.toolBtn:hover .toolTip {
+    display: block;
+}
+
+#bottomRight {
+    position: absolute;
+    bottom: 20px;
+    right: 20px;
+    width: 25px;
+    height: 25px;
+    text-shadow:    0px 0px 15px white, 
+                    0px 0px 15px white,
+                    0px 0px 15px white,
+                    0px 0px 15px white,
+                    0px 0px 15px white,
+                    0px 0px 15px white,
+                    0px 0px 15px white,
+                    0px 0px 15px white;
+    font-weight: bold;
+    font-size: 24px;
+    font-family:'Courier New', Courier, monospace;
+}
+
+#bottomRight:hover {
+    cursor: pointer;
+    color: rgb(0,100,255);
+   
+}
+
+#bottomRight p {
+    margin: 0 auto;
+    padding: 0;
+    text-align: center;
+}
+
+#modelCatalog {
+    position: absolute;
+    z-index: 4;
+    width: 80%;
+    max-height: 80%;
+    background-color: rgba(255,255,255,0.9);
+    margin: 0 auto;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    border: solid 4px white;
+    overflow: auto;
+    display: none;
+    
+}
+
+#catalogClose {
+    position: absolute;
+    top: 0px;
+    right: 0px;
+    padding: 0;
+    margin: 0 auto;
+}
+
+#catalogClose p {
+    padding: 0;
+    margin: 10px;
+    font-family: sans-serif;
+    color: black;
+}
+
+#catalogClose p:hover {
+    cursor: pointer;
+    color: rgba(0,0,0,0.5);
+}
+
+#modelOptions {
+    display: flex; 
+    align-items: center;
+    justify-content: center;
+    flex-wrap: wrap;
+    
+}
+
+.modelOption {
+    display: inline-block;
+    padding: 20px;
+    margin-top: 20px;
+    
+}
+
+.modelOption h3 {
+    text-align: center;
+    font-family: 'Open Sans', Arial, Helvetica, sans-serif;
+}
+
+.modelImg {
+    width: 220px;
+    opacity: 0.8;
+    border-radius: 20px;
+}
+
+.modelImg:hover {
+    opacity: 1;
+    cursor: pointer;
+}
+
+#loadOption {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 20px;
+}
+

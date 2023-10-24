@@ -1,0 +1,1474 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+        <title>PBR Demo</title>
+
+        <link href="./styles.css" rel="stylesheet">
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Open+Sans&display=swap" rel="stylesheet">
+        <script type="text/javascript"
+                src="https://cdn.jsdelivr.net/gh/techsoft3d/hoops-web-viewer@2023.2.2/hoops_web_viewer.js?v=2023.2.2"></script>
+
+</head>
+
+<body>
+        <div id="viewer"></div>
+
+        <div id="topLeft">
+                <button id="chooseModelBtn">Choose model</button>
+        </div>
+
+        <div id="bottomRight">
+                <a href="https://docs.techsoft3d.com/communicator/latest/prog_guide/viewing/model_attributes/materials/physically-based-rendering.html?highlight=pbr"
+                        target="_blank">
+                        <p id="infoLogo">i</p>
+                </a>
+        </div>
+
+        <div id="modelCatalog">
+                <div id="catalogClose">
+                        <p>X</p>
+                </div>
+                <div id="modelOptions">
+                        <div class="modelOption">
+                                <img src="/data/img/_micro engine.png" alt="Micro Engine" class="modelImg"
+                                        id="microengineLink" />
+                                <h3>Microengine (CATIA V5)</h3>
+                        </div>
+                        <div class="modelOption">
+                                <img src="/data/img/_MOTO_X.png" alt="Motorcycle" class="modelImg" id="motoLink" />
+                                <h3>Motorcycle (ProE)</h3>
+                        </div>
+                        <div class="modelOption">
+                                <img src="/data/img/scene.png" alt="Rover" class="modelImg" id="roverLink" />
+                                <h3>Rover (GLTF)</h3>
+                        </div>
+                        <div class="modelOption">
+                                <img src="/data/img/BoomBox.png" alt="Boom Box" class="modelImg" id="boomBoxLink" />
+                                <h3>Boom Box (GLB)</h3>
+                        </div>
+                </div>
+
+                <div style="display: none;" id="loadOption">
+                        <label id="loadButton" style="display: none;" for="modelFile">Load SCS</label>
+                        <input type="file" name="modelFile" id="modelFile" style="display: none;" accept=".scs" />
+                </div>
+        </div>
+
+        <div id="pallet_container">
+                <div id="pbrPallet" class="pallet">
+                        <table id="pbrPropTable">
+                                <tr>
+                                        <td>
+                                                <label for="baseColor">Base Color:</label>
+                                        </td>
+                                        <td>
+                                                <input type="color" id="baseColor">
+                                        </td>
+                                        <td>
+                                                <p id="baseColorValueOut"></p>
+                                        </td>
+                                </tr>
+                                <tr>
+                                        <td>
+                                                <label for="metallicValue">Metallic:</label>
+                                        </td>
+                                        <td>
+                                                <input type="range" id="metallicValue" value="0" step="0.1" min="0"
+                                                        max="1">
+                                        </td>
+                                        <td>
+                                                <p id="metallicValueOut"></p>
+                                        </td>
+                                </tr>
+                                <tr>
+                                        <td>
+                                                <label for="roughnessValue">Roughness:</label>
+                                        </td>
+                                        <td>
+                                                <input type="range" id="roughnessValue" value="0.5" step="0.1" min="0"
+                                                        max="1">
+                                        </td>
+                                        <td>
+                                                <p id="roughnessValueOut"></p>
+                                        </td>
+                                </tr>
+                                <tr>
+                                        <td>
+                                                <label for="opacityValue">Opacity:</label>
+                                        </td>
+                                        <td>
+                                                <input type="range" id="opacityValue" value="1" step="0.1" min="0"
+                                                        max="1">
+                                        </td>
+                                </tr>
+                        </table>
+                        <p class="smallNote">Press CTRL to select multiple components or CTRL+A to select all.</p>
+                        <div class="toolBtn2">
+
+
+                        </div>
+                        <!--<div class="toolBtn2" >
+                                <input type="checkbox" id="pbrProps"><label for="pbrProps" checked>PBR Props Enabled?</label>
+                         </div>-->
+                        <div class="toolBtn2">
+
+                        </div>
+                        <div class="toolBtn2">
+
+                        </div>
+                        <p class="pbrNote" id="metalNote"></p>
+
+                </div>
+
+                <div id="aOPallet" class="pallet">
+                        <table>
+                                <tr>
+                                        <td>
+                                                <label for="aOActive">Ambient Occlusion</label>
+                                        </td>
+                                        <td>
+                                                <input type="checkbox" id="aOActive">
+                                        </td>
+                                </tr>
+                                <tr>
+                                        <td>
+                                                <label for="aOValue">Intensity</label>
+                                        </td>
+                                        <td>
+                                                <input type="range" id="aOValue" value="0.02" step="0.002" min="0"
+                                                        max="0.1">
+                                        </td>
+                                </tr>
+                        </table>
+                </div>
+
+                <div id="backgroundPallet" class="pallet">
+                        <p>Background Colors</p>
+                        <table>
+                                <tr>
+                                        <td>
+                                                <label for="upperBackgroundColor">Upper Background</label>
+                                        </td>
+                                        <td>
+                                                <input type="color" id="upperBackgroundColor">
+                                        </td>
+                                </tr>
+                                <tr>
+                                        <td>
+                                                <label for="lowerBackgroundColor">Lower Background</label>
+                                        </td>
+                                        <td>
+                                                <input type="color" id="lowerBackgroundColor">
+                                        </td>
+                                </tr>
+                        </table>
+                        <table id="groundEffects">
+                                <tr>
+                                        <td>
+                                                <label for="showSimpleShadows">Simple Shadow</label>
+                                        </td>
+                                        <td>
+                                                <input type="range" id="showSimpleShadows" min="0" max="50" step="1"
+                                                        value="0" />
+                                        </td>
+                                </tr>
+                                <tr>
+                                        <td>
+                                                <label for="showSimpleReflection">Simple Reflection</label>
+                                        </td>
+                                        <td>
+                                                <input type="range" id="showSimpleReflection" min="0" max="50" step="1"
+                                                        value="0" />
+                                        </td>
+                                </tr>
+                        </table>
+                        <p>
+                                Model Orientation
+                        </p>
+
+                        <label for="upAxis">"Up" axis:</label>
+                        <select id="upAxis">
+                                <option value="x">X</option>
+                                <option value="y">Y</option>
+                                <option value="z" selected>Z</option>
+                        </select>
+                        <div>
+                                <button id="handleButton">Move</button>
+                                <p id="handleButtonNote" class="smallNote"></p>
+                        </div>
+                </div>
+
+                <div id="iblPallet" class="pallet">
+                        <p>Image-Based Lighting</p>
+                        <table>
+                                <tr>
+                                        <td>
+                                                <label for="iblEnv">Environment</label>
+                                        </td>
+                                        <td>
+                                                <select id="iblEnv">
+                                                        <option value="warehouse">Warehouse</option>
+                                                        <option value="field">Field</option>
+                                                        <option value="studio">Studio</option>
+                                                        <option value="hill">Hill</option>
+                                                        <option value="none">None</option>
+                                                </select>
+                                        </td>
+                                </tr>
+                                <tr>
+                                        <td>
+                                                <label for="iblIntensity">Intensity</label>
+
+                                        </td>
+                                        <td>
+                                                <input type="range" max="1" min="0" step="0.02" id="iblIntensity"
+                                                        value="1">
+                                        </td>
+                                </tr>
+                                <tr>
+                                        <td>
+                                                <label for="iblAnimate">Animate</label>
+                                        </td>
+                                        <td>
+                                                <input type="checkbox" id="iblAnimate">
+                                        </td>
+                                </tr>
+                                <tr>
+                                        <td>
+                                                <label for="iblSpeed">Speed</label>
+                                        </td>
+                                        <td>
+                                                <input type="range" id="iblSpeed" min="0.1" max="1" value="0.5"
+                                                        step="0.05">
+                                        </td>
+                                </tr>
+                        </table>
+
+
+                </div>
+
+                <div id="displayPallet" class="pallet">
+
+
+                        <table>
+                                <tr>
+                                        <td>
+                                                <label for="displayMode">Display Mode</label>
+                                        </td>
+                                        <td>
+                                                <select id="displayMode">
+                                                        <option value="wireframe">Wireframe</option>
+                                                        <option value="shaded">Shaded</option>
+                                                        <option value="wireframeonshaded" selected>Shaded Wireframe
+                                                        </option>
+                                                        <option value="toon">Toon</option>
+                                                        <option value="gooch">Gooch</option>
+                                                        <option value="xray">X-Ray</option>
+                                                        <option value="hiddenline">Hidden Line</option>
+                                                </select>
+                                        </td>
+                                </tr>
+                                <tr>
+                                        <td>
+                                                <label for="orthographic">Orthographic</label>
+
+                                        </td>
+                                        <td>
+                                                <input type="radio" name="projection" id="orthographic"
+                                                        value="orthographic" checked>
+                                        </td>
+                                </tr>
+                                <tr>
+                                        <td>
+                                                <label for="perspective">Perspective</label>
+                                        </td>
+                                        <td>
+                                                <input type="radio" name="projection" id="perspective"
+                                                        value="perspective">
+                                        </td>
+                                </tr>
+                        </table>
+                </div>
+
+                <div id="lightPallet" class="pallet">
+                        <p>Directional Lights</p>
+                        <table id="lightTable">
+                                <tr>
+                                        <td>
+                                                <label for="xpLight">X+</label>
+                                        </td>
+                                        <td>
+                                                <input type="color" id="xpLightColor" class="lightProp">
+                                        </td>
+                                        <td>
+                                                <input type="checkbox" id="xpLight" class="lightProp">
+                                        </td>
+                                </tr>
+                                <tr>
+                                        <td>
+                                                <label for="xnLight">X-</label>
+                                        </td>
+                                        <td>
+                                                <input type="color" id="xnLightColor" class="lightProp">
+                                        </td>
+                                        <td>
+                                                <input type="checkbox" id="xnLight" class="lightProp">
+                                        </td>
+                                </tr>
+                                <tr>
+                                        <td>
+                                                <label for="ypLight">Y+</label>
+                                        </td>
+                                        <td>
+                                                <input type="color" id="ypLightColor" class="lightProp">
+                                        </td>
+                                        <td>
+                                                <input type="checkbox" id="ypLight" class="lightProp">
+                                        </td>
+                                </tr>
+                                <tr>
+                                        <td>
+                                                <label for="ynLight">Y-</label>
+                                        </td>
+                                        <td>
+                                                <input type="color" id="ynLightColor" class="lightProp">
+                                        </td>
+                                        <td>
+                                                <input type="checkbox" id="ynLight" class="lightProp">
+                                        </td>
+                                </tr>
+                                <tr>
+                                        <td>
+                                                <label for="zpLight">Z+</label>
+                                        </td>
+                                        <td>
+                                                <input type="color" id="zpLightColor" class="lightProp">
+                                        </td>
+                                        <td>
+                                                <input type="checkbox" id="zpLight" class="lightProp">
+                                        </td>
+                                </tr>
+                                <tr>
+                                        <td>
+                                                <label for="znLight">Z-</label>
+                                        </td>
+                                        <td>
+                                                <input type="color" id="znLightColor" class="lightProp">
+                                        </td>
+                                        <td>
+                                                <input type="checkbox" id="znLight" class="lightProp">
+                                        </td>
+                                </tr>
+                        </table>
+
+                        <p>Light Space</p>
+
+                        <label for="cameraworld">Camera</label>
+                        <input type="radio" name="lightspace" id="cameraspace" value="cameraspace">
+                        <label for="spaceworld">World</label>
+                        <input type="radio" name="lightspace" id="worldspace" value="worldspace">
+
+                </div>
+        </div>
+
+
+        <div id="toolbar">
+                <div class="toolBtn" id="pbrOp">
+                        <p>Material</p>
+                        <div class="toolTip">
+                                <p><span class="bold">Base color:</span> color of the faces.</p>
+                                <p><span class="bold">Metallic:</span> Choose 1 for metal, 0 for dielectric.</p>
+                                <p><span class="bold">Roughness:</span> Slide between 0 (smooth) and 1 (rough).</p>
+                                <p><span class="bold">Opacity:</span> Slide between 0 (transparent) and 1 (opaque).</p>
+                        </div>
+                </div>
+                <div class="toolBtn" id="aOOp">
+                        <p>Ambient Occlusion</p>
+                        <div class="toolTip">
+                                <p><span class="bold">Ambient Occlusion:</span> soft shadows cast on the model. Slide
+                                        right to emphasize, left to minimize.</p>
+                        </div>
+                </div>
+                <div class="toolBtn" id="lightsOp">
+                        <p>Lighting</p>
+                        <div class="toolTip">
+                                <p><span class="bold">Directional Lights:</span> Choose up to 3 lights based on their
+                                        lighting direction and set their color.</p>
+                                <p><span class="bold">Light Space:</span> Choose whether lights will be based on the
+                                        camera axes (and follow the camera) or world axes.</p>
+                        </div>
+                </div>
+                <div class="toolBtn" id="iblOp">
+                        <p>IBL</p>
+                        <div class="toolTip">
+                                <p><span class="bold">Image Based Lighting (IBL):</span> Choose whether to light the
+                                        scene with real-world images, set the intensity of this light, animate the scene
+                                        lighting, and adjust the speed of animation.</p>
+                        </div>
+                </div>
+                <div class="toolBtn" id="backgroundOp">
+                        <p>Scene</p>
+                        <div class="toolTip">
+                                <p><span class="bold">Background Colors:</span> Set the upper and lower backgroud color
+                                        of the scene.</p>
+                                <p><span class="bold">Model Orientation:</span> Rotate the model so the correct axis is
+                                        pointing upwards (in positive Z).</p>
+                                <p><span class="bold">Simple Shadow:</span> Enable a simple shadow cast on the ground
+                                        plane. Slide right to blur, slide left to sharpen (or all the way to disable).
+                                </p>
+                                <p><span class="bold">Simple Reflection:</span> Enable a simple reflection cast on the
+                                        ground plane. Slide right to blur, slide left to sharpen (or all the way to
+                                        disable).</p>
+                                <!--<p><span class="bold">Move:</span> Add handles to move individual or groups of nodes (may not work as expected if model orientation is changed).</p>-->
+                        </div>
+                </div>
+                <div class="toolBtn" id="displayOp">
+                        <p>Draw Mode</p>
+                        <div class="toolTip">
+                                <p><span class="bold">Display Mode:</span> Set the drawing mode for the model (for best
+                                        results, choose "Shaded").</p>
+                                <p><span class="bold">Orthographic/Perspective:</span> Change the projection style of
+                                        the model.</p>
+                        </div>
+                </div>
+                <div class="toolBtn" id="renderOp">
+                        <p>Render Engine</p>
+                        <div class="toolTip">
+                                <p><span class="bold">Render Engine:</span> Click this button when the default
+                                        microengine model is loaded to render pre-assigned PBR values that have been
+                                        saved. Note: this button will disappear when the model is changed.</p>
+                        </div>
+                </div>
+        </div>
+
+
+        <script type="text/javascript">
+                let hwv;
+
+                let rootNodeId = null;
+                let defaultNodeMatrix = null;
+
+
+                window.onload = () => {
+
+
+                        hwv = new Communicator.WebViewer({
+                                containerId: "viewer",
+                                endpointUri: "./data/_micro engine.scs"
+                        });
+
+                        //hwv.model.setEnableAutomaticUnitScaling(false); //use to get camera position for conversion output png
+
+                        // set up operators:
+                        const PbrOperator = new PbrOp(hwv);
+                        const PbrOperatorId = hwv.operatorManager.registerCustomOperator(PbrOperator);
+
+                        let pbrOpActive = false;
+                        let aOOpActive = false;
+                        let backgroundOpActive = false;
+                        let lightsOpActive = false;
+                        let displayOpActive = false;
+                        let iblEnvOpActive = false;
+
+                        // make viewer resizeable:
+                        window.onresize = () => {
+                                hwv.resizeCanvas();
+                        }
+
+                        let initialModel = true; // track if the model has been changed
+
+                        let iblAnimateSpeed = parseFloat(document.getElementById('iblSpeed').value); // initial speed for ibl animation
+
+                        let shadows = false;
+                        let reflection = false;
+
+                        const xpLight = new Communicator.Light(Communicator.LightType.Directional, Communicator.LightSpace.Camera, new Communicator.Point3(1, 0, 0), new Communicator.Color(255, 255, 255));
+                        const xnLight = new Communicator.Light(Communicator.LightType.Directional, Communicator.LightSpace.Camera, new Communicator.Point3(-1, 0, 0), new Communicator.Color(255, 255, 255));
+                        const ypLight = new Communicator.Light(Communicator.LightType.Directional, Communicator.LightSpace.Camera, new Communicator.Point3(0, 1, 0), new Communicator.Color(255, 255, 255));
+                        const ynLight = new Communicator.Light(Communicator.LightType.Directional, Communicator.LightSpace.Camera, new Communicator.Point3(0, -1, 0), new Communicator.Color(255, 255, 255));
+                        const zpLight = new Communicator.Light(Communicator.LightType.Directional, Communicator.LightSpace.Camera, new Communicator.Point3(0, 0, 1), new Communicator.Color(255, 255, 255));
+                        const znLight = new Communicator.Light(Communicator.LightType.Directional, Communicator.LightSpace.Camera, new Communicator.Point3(0, 0, -1), new Communicator.Color(255, 255, 255));
+
+                        const LightManager = {
+                                xpLight: {
+                                        on: false,
+                                        color: '#ffffff',
+                                        vector: new Communicator.Point3(1, 0, 0)
+                                },
+                                xnLight: {
+                                        on: false,
+                                        color: '#ffffff',
+                                        vector: new Communicator.Point3(-1, 0, 0)
+                                },
+                                ypLight: {
+                                        on: false,
+                                        color: '#ffffff',
+                                        vector: new Communicator.Point3(0, 1, 0)
+                                },
+                                ynLight: {
+                                        on: false,
+                                        color: '#ffffff',
+                                        vector: new Communicator.Point3(0, -1, 0)
+                                },
+                                zpLight: {
+                                        on: false,
+                                        color: '#ffffff',
+                                        vector: new Communicator.Point3(0, 0, 1)
+                                },
+                                znLight: {
+                                        on: false,
+                                        color: '#ffffff',
+                                        vector: new Communicator.Point3(0, 0, -1)
+                                },
+                                cameraSpace: true //if false, use world space                
+                        }
+
+                        function updateLights() {
+                                // clear all lights, then add each light and the color:
+                                hwv.view.clearLights();
+
+                                let useCameraSpace;
+
+                                LightManager.cameraSpace ? useCameraSpace = Communicator.LightSpace.Camera : useCameraSpace = Communicator.LightSpace.World;
+
+                                for (let light in LightManager) {
+                                        //see if a light is on and, if so, set the color
+                                        if (LightManager[light].on) {
+                                                const lightColor = hexToRgb(LightManager[light].color)
+                                                const newLight = new Communicator.Light(Communicator.LightType.Directional, useCameraSpace, LightManager[light].vector, new Communicator.Color(lightColor.rgbR, lightColor.rgbG, lightColor.rgbB));
+                                                hwv.view.addLight(newLight).catch((err) => alert('Light cannot be added!'));
+                                        }
+                                }
+
+
+                        }
+
+                        function initializeLights() {
+                                hwv.view.clearLights();
+
+                                LightManager.zpLight.on = true;
+
+                                for (const light in LightManager) {
+                                        if (light !== 'cameraSpace') {
+                                                document.getElementById(light).checked = LightManager[light].on;
+                                                document.getElementById(light + "Color").value = LightManager[light].color;
+                                        }
+                                }
+
+                                LightManager.cameraSpace ? document.getElementById('cameraspace').checked = true : document.getElementById('worldspace').checked = true;
+
+                                updateLights();
+
+                        }
+
+                        const handlesOp = hwv.operatorManager.getOperator(Communicator.OperatorId.Handle);
+                        handlesOp.setHandleSize(2);
+                        let handleMode = false;
+
+                        hwv.setCallbacks({
+
+                                sceneReady: () => {
+                                        //set initial camera view
+                                        hwv.animationManager.clear();
+
+                                        //set initial camera view
+                                        let cameraPosition = new Communicator.Point3(-1000, -500, -500);
+                                        let target = new Communicator.Point3(0, 0, 0);
+                                        let upDirection = new Communicator.Point3(0, 0, 1);
+
+                                        const defaultCamera = Communicator.Camera.create(cameraPosition, target, upDirection, 1, 720, 720, 0.01);
+                                        // setTimeout(()=> {hwv.view.setCamera(defaultCamera)}, 1000);
+
+
+                                        hwv.view.setBackgroundColor(new Communicator.Color(10, 10, 10), new Communicator.Color(70, 70, 70));
+                                        hwv.view.getAxisTriad().enable();
+                                        // hwv.view.getAxisTriad().OverlayAnchor(Communicator.OverlayAnchor.BottomLeft);
+
+                                        // remove default lighing and set initial light
+                                        initializeLights();
+
+
+                                        // set default ibl environment:
+
+                                        const defaultIblFile = './img/cape_hill.ktx2';
+                                        document.getElementById('iblEnv').value = 'hill';
+                                        setIblEnvironment(defaultIblFile);
+
+
+                                        // Use the below code to "focus" the viewer div, which enables keydown events:
+                                        const canvas = hwv.getViewElement();
+
+                                        hwv.focusInput(true);
+                                        canvas.addEventListener("mouseenter", () => {
+                                                hwv.focusInput(true);
+                                        });
+
+
+                                        registerOperators();
+                                },
+
+                                modelStructureReady: () => {
+
+
+                                        hwv.selectionManager.setNodeElementSelectionHighlightMode(Communicator.SelectionHighlightMode.OutlineOnly);
+                                        hwv.selectionManager.setNodeSelectionHighlightMode(Communicator.SelectionHighlightMode.OutlineOnly);
+
+                                        rootNodeId = hwv.model.getAbsoluteRootNode();
+                                        defaultNodeMatrix = hwv.model.getNodeMatrix(rootNodeId);
+
+
+                                },
+
+                                selectionArray: (selectionItems) => {
+                                        if (selectionItems[0]) {
+                                                console.log(selectionItems[0].getSelection().getNodeId());
+
+                                                if (handleMode) {
+                                                        const selectionItems = hwv.selectionManager.getResults(); // all currently selected items
+
+                                                        let nodeIds = [];
+
+                                                        for (let i = 0; i < selectionItems.length; i++) {
+                                                                nodeIds.push(selectionItems[i].getNodeId());
+                                                        }
+
+                                                        // Add handles to the selected nodes:                           
+                                                        handlesOp.addHandles(nodeIds);
+                                                        handlesOp.showHandles();
+                                                }
+                                        }
+
+                                }
+                        });
+
+
+                        setEventListeners();
+
+                        hwv.start();
+
+
+
+                        function renderEngine() {
+
+                                const Color = {
+                                        red: new Communicator.Color(200, 0, 0),
+                                        blue: new Communicator.Color(0, 204, 204),
+                                        white: new Communicator.Color(250, 250, 250),
+                                        black: new Communicator.Color(10, 10, 10),
+                                        brass: new Communicator.Color(190, 150, 10),
+                                        silver: new Communicator.Color(200, 200, 200),
+                                        steel: new Communicator.Color(150, 150, 150),
+                                        wood: new Communicator.Color(125, 85, 20),
+                                }
+                                const renderArray = [
+                                        //[node, metal, roughness]
+                                        [20, 1, 0.2, Color.blue], //housing
+                                        [28, 1, 0.2, Color.silver], //housing top
+                                        [67, 1, 0.2, Color.blue], //back cover
+                                        [71, 1, 0.2, Color.blue], //front cover
+                                        [59, 1, 0.4, Color.steel], //shaft
+                                        [95, 1, 0.3, Color.steel], //carbuerator
+                                        [63, 0, 0.4, Color.black], //bearing
+
+                                        //screws
+                                        [75, 1, 0.4, Color.silver], //back cover
+                                        [77, 1, 0.4, Color.silver], //back cover
+                                        [79, 1, 0.4, Color.silver], //back cover
+                                        [81, 1, 0.4, Color.silver], //back cover
+                                        [85, 1, 0.4, Color.silver], //bottom
+                                        [87, 1, 0.4, Color.silver], //bottom
+                                        [89, 1, 0.4, Color.silver], //bottom
+                                        [91, 1, 0.4, Color.silver], //bottom
+
+                                        //internals
+                                        [55, 1, 0.4, Color.steel], //piston
+                                        [24, 1, 0.4, Color.steel], //cylinder liner
+                                        [51, 1, 0.4, Color.steel], //piston
+                                        [39, 1, 0.4, Color.steel], //push rod
+                                        [43, 1, 0.4, Color.black], //bearing
+                                        [47, 1, 0.4, Color.black], //bearing
+
+
+
+                                ];
+
+                                // set the metal roughness
+                                const nodesColorMap = new Map();
+                                renderArray.forEach(([node, metal, roughness, color]) => {
+
+                                        hwv.model.setMetallicRoughness([node], metal, roughness);
+
+                                        nodesColorMap.set(node, color);
+                                })
+
+                                hwv.model.setNodesColors(nodesColorMap);
+
+                                hwv.view.setAmbientOcclusionRadius(0.02);
+                                hwv.view.setAmbientOcclusionEnabled(true);
+                                hwv.view.setDrawMode(Communicator.DrawMode.Shaded);
+                                document.getElementById('displayMode').value = 'shaded';
+
+
+                        }
+
+
+
+
+
+                        function registerOperators() {
+
+                        }
+
+                        function setPbrOp(opActive) {
+                                if (opActive) {
+                                        hwv.operatorManager.remove(Communicator.OperatorId.Select);
+                                        hwv.operatorManager.push(PbrOperatorId);
+                                }
+                                else {
+                                        hwv.operatorManager.remove(PbrOperatorId);
+                                        hwv.operatorManager.push(Communicator.OperatorId.Select);
+                                }
+                        }
+
+                        function getAOSettings() {
+                                const aOEnabled = hwv.view.getAmbientOcclusionEnabled();
+                                const aORadius = hwv.view.getAmbientOcclusionRadius();
+
+                                document.getElementById('aOActive').checked = aOEnabled;
+                                document.getElementById('aOValue').value = aORadius;
+                        }
+
+                        function setEventListeners() {
+
+                                document.getElementById('modelFile').onchange = async (e) => {
+                                        hwv.model.clear().then(() => {
+
+                                                document.getElementById("modelCatalog").style.display = "none";
+
+                                                // Hide the render engine button:
+                                                document.getElementById('renderOp').style.display = "none";
+
+                                                const userFile = e.target.files[0];
+                                                const objectURL = window.URL.createObjectURL(userFile);
+                                                hwv.model.loadSubtreeFromScsFile(hwv.model.getRootNode(), objectURL).then(() => {
+                                                        console.log('loaded');
+                                                });
+                                        });
+                                };
+
+
+                                const modelLinks = document.getElementsByClassName("modelImg");
+                                for (let i = 0; i < modelLinks.length; i++) {
+
+                                        const modelId = modelLinks[i].id;
+                                        let modelUrl = null;
+
+                                        switch (modelId) {
+                                                case "microengineLink":
+                                                        modelUrl = "_micro engine";
+                                                        break;
+                                                case "motoLink":
+                                                        modelUrl = "_MOTO_X";
+                                                        break;
+                                                case "roverLink":
+                                                        modelUrl = "scene";
+                                                        break;
+                                                case "boomBoxLink":
+                                                        modelUrl = "BoomBox";
+                                                        break;
+                                                default:
+                                                        // do nothing
+                                                        break;
+                                        }
+
+
+                                        document.getElementById(modelId).onclick = () => {
+                                                if (modelUrl == null) {
+                                                        alert("Invalid selection, please choose another model.");
+                                                        return;
+                                                }
+                                                changeModel(`./data/${modelUrl}.scs`);
+                                        }
+                                }
+
+
+
+                                function changeModel(modelUrl) {
+
+                                        hwv.model.clear().then(() => {
+
+                                                // Hide the model catalog:
+                                                document.getElementById("modelCatalog").style.display = "none";
+
+                                                // Hide the render engine button:
+                                                if (initialModel) {
+                                                        document.getElementById('renderOp').style.display = "none";
+                                                        initialModel = false;
+                                                }
+
+                                                hwv.model.loadSubtreeFromScsFile(hwv.model.getRootNode(), modelUrl).then(() => {
+                                                        console.log('loaded');
+                                                });
+                                        });
+                                }
+
+                                document.getElementById("chooseModelBtn").onclick = () => {
+                                        document.getElementById("modelCatalog").style.display = "block";
+                                }
+
+                                document.getElementById("catalogClose").onclick = () => {
+                                        document.getElementById("modelCatalog").style.display = "none";
+                                }
+
+                                document.getElementById('pbrOp').onclick = (e) => {
+                                        e.preventDefault();
+
+                                        if (!pbrOpActive) {
+                                                resetOps();
+                                                setPbrOp(!pbrOpActive);
+                                                pbrOpActive = true;
+                                                document.getElementById('pbrPallet').style.display = 'block';
+                                                document.getElementById('pbrOp').classList.add('activeBtn');
+                                        }
+                                        else {
+                                                setPbrOp(!pbrOpActive);
+                                                pbrOpActive = false;
+                                                document.getElementById('pbrPallet').style.display = 'none';
+                                                document.getElementById('pbrOp').classList.remove('activeBtn');
+                                        }
+
+                                };
+
+                                document.getElementById('aOOp').onclick = (e) => {
+                                        e.preventDefault();
+
+                                        if (!aOOpActive) {
+                                                resetOps();
+                                                aOOpActive = true;
+                                                getAOSettings(); //update the inputs with the latest ambient occlusion settings
+                                                document.getElementById('aOPallet').style.display = 'block';
+                                                document.getElementById('aOOp').classList.add('activeBtn');
+                                        }
+
+                                        else {
+                                                aOOpActive = false;
+                                                document.getElementById('aOPallet').style.display = 'none';
+                                                document.getElementById('aOOp').classList.remove('activeBtn');
+                                        }
+                                }
+
+                                document.getElementById('backgroundOp').onclick = (e) => {
+                                        e.preventDefault();
+                                        if (!backgroundOpActive) {
+                                                resetOps();
+                                                backgroundOpActive = true;
+
+                                                document.getElementById('backgroundPallet').style.display = 'block';
+                                                document.getElementById('backgroundOp').classList.add('activeBtn');
+                                        }
+
+                                        else {
+                                                backgroundOpActive = false;
+                                                document.getElementById('backgroundPallet').style.display = 'none';
+                                                document.getElementById('backgroundOp').classList.remove('activeBtn');
+                                        }
+                                }
+
+                                document.getElementById('displayOp').onclick = (e) => {
+                                        e.preventDefault();
+                                        if (!displayOpActive) {
+                                                resetOps();
+                                                displayOpActive = true;
+                                                document.getElementById('displayPallet').style.display = 'block';
+                                                document.getElementById('displayOp').classList.add('activeBtn');
+                                        }
+                                        else {
+                                                displayOpActive = false;
+                                                document.getElementById('displayPallet').style.display = 'none';
+                                                document.getElementById('displayOp').classList.remove('activeBtn');
+                                        }
+                                }
+
+                                document.getElementById('lightsOp').onclick = (e) => {
+                                        e.preventDefault();
+                                        if (!lightsOpActive) {
+                                                resetOps();
+                                                lightsOpActive = true;
+                                                document.getElementById('lightPallet').style.display = 'block';
+                                                document.getElementById('lightsOp').classList.add('activeBtn');
+                                        }
+                                        else {
+                                                lightsOpActive = false;
+                                                document.getElementById('lightPallet').style.display = 'none';
+                                                document.getElementById('lightsOp').classList.remove('activeBtn');
+                                        }
+                                }
+
+                                document.getElementById('iblOp').onclick = (e) => {
+                                        e.preventDefault();
+                                        if (!iblEnvOpActive) {
+                                                resetOps();
+                                                iblEnvOpActive = true;
+                                                document.getElementById('iblPallet').style.display = 'block';
+                                                document.getElementById('iblOp').classList.add('activeBtn');
+                                        }
+                                        else {
+                                                iblEnvOpActive = false;
+                                                document.getElementById('iblPallet').style.display = 'none';
+                                                document.getElementById('iblOp').classList.remove('activeBtn');
+                                        }
+                                }
+
+                                document.getElementById('aOActive').onchange = () => {
+                                        const aOEnabled = document.getElementById('aOActive').checked;
+                                        hwv.view.setAmbientOcclusionEnabled(aOEnabled);
+                                }
+
+                                document.getElementById('aOValue').oninput = () => {
+                                        const aORadius = parseFloat(document.getElementById('aOValue').value);
+                                        hwv.view.setAmbientOcclusionRadius(aORadius);
+                                }
+
+                                document.getElementById('upperBackgroundColor').oninput = () => updateBackgroundColor();
+
+                                document.getElementById('lowerBackgroundColor').oninput = () => updateBackgroundColor();
+
+
+
+                                document.getElementById('upAxis').onchange = async () => {
+                                        //get dropdown selection:
+                                        const upAxis = document.getElementById('upAxis').value;
+                                        await hwv.model.setNodeMatrix(rootNodeId, defaultNodeMatrix);
+                                        switch (upAxis) {
+                                                case "x":
+                                                        await hwv.model.setNodeMatrix(rootNodeId, Communicator.Matrix.yAxisRotation(90));
+                                                        break;
+                                                case "y":
+                                                        await hwv.model.setNodeMatrix(rootNodeId, Communicator.Matrix.xAxisRotation(270));
+                                                        break;
+                                                case "z":
+                                                        return;
+
+                                                default:
+                                                        console.log('invalid selection, setting default: model z-axis is up');
+                                                        return;
+
+                                        }
+
+                                        // Place on ground plane:
+                                        //hwv.model.getNodesBounding([rootNodeId]).then((nodeBounding) => {
+                                        //let nodeBounding = await hwv.model.getNodesBounding([rootNodeId]);
+                                        let modelBounding = await hwv.model.getModelBounding(true, false, true);
+                                        let nodeMatrix = hwv.model.getNodeMatrix(rootNodeId);
+                                        nodeMatrix.setTranslationComponent(0, 0, -modelBounding.min.z);
+                                        await hwv.model.setNodeMatrix(rootNodeId, nodeMatrix);
+                                        let newbounds = await hwv.model.getNodesBounding([rootNodeId]);
+                                        hwv.view.fitWorld();
+
+                                        //update ground plane:
+                                        let groundPlane = hwv.view.getGroundPlane();
+                                        groundPlane.position = new Communicator.Point3(0, 0, 0);
+                                        hwv.view.setGroundPlane(groundPlane);
+
+                                }
+
+                                document.getElementById('displayMode').onchange = () => {
+                                        const drawMode = document.getElementById('displayMode').value;
+                                        let hwvDrawMode = null;
+                                        switch (drawMode) {
+                                                case "wireframe":
+                                                        hwvDrawMode = Communicator.DrawMode.Wireframe;
+                                                        break;
+                                                case "shaded":
+                                                        hwvDrawMode = Communicator.DrawMode.Shaded;
+                                                        break;
+                                                case "wireframeonshaded":
+                                                        hwvDrawMode = Communicator.DrawMode.WireframeOnShaded;
+                                                        break;
+                                                case "toon":
+                                                        hwvDrawMode = Communicator.DrawMode.Toon;
+                                                        break;
+                                                case "gooch":
+                                                        hwvDrawMode = Communicator.DrawMode.Gooch;
+                                                        break;
+                                                case "xray":
+                                                        hwvDrawMode = Communicator.DrawMode.XRay;
+                                                        break;
+                                                case "hiddenline":
+                                                        hwvDrawMode = Communicator.DrawMode.HiddenLine;
+                                                        break;
+                                                default:
+                                                //no change
+
+                                        }
+
+                                        hwv.view.setDrawMode(hwvDrawMode);
+                                }
+
+
+                                document.getElementById('renderOp').onclick = (e) => {
+                                        e.preventDefault();
+                                        renderEngine();
+                                }
+                                /*document.getElementById('metalRough').onchange = () => {
+                                        if (document.getElementById('metalRough').checked) {
+                                                //active metal/roughness
+                                                document.getElementById("metallicValue").disabled = false;
+                                                document.getElementById("roughnessValue").disabled = false;
+                                        }
+                                        else {
+                                                document.getElementById("metallicValue").disabled = true;
+                                                document.getElementById("roughnessValue").disabled = true;
+                                        }
+                                }*/
+
+                                document.getElementById('metallicValue').oninput = () => {
+                                        //setMetallicRoughness()
+
+                                        updateMetallicRoughness()
+
+                                }
+                                document.getElementById('roughnessValue').oninput = () => {
+                                        //setMetallicRoughness()
+                                        updateMetallicRoughness()
+                                }
+
+                                document.getElementById("opacityValue").oninput = (e) => {
+                                        let nodeIds = [];
+                                        const selectionItems = hwv.selectionManager.getResults();
+                                        selectionItems.map((selectionItem) => {
+                                                nodeIds.push(selectionItem.getNodeId());
+                                        });
+
+                                        if (selectionItems.length !== 0) {
+                                                hwv.model.setNodesOpacity(nodeIds, parseFloat(e.target.value));
+                                        }
+                                }
+
+                                document.getElementById('baseColor').oninput = () => {
+                                        //const currentNode = hwv.selectionManager.getLast().getNodeId();
+                                        const currentNodes = [];
+                                        hwv.selectionManager.getResults().forEach((item) => {
+                                                currentNodes.push(item.getNodeId());
+                                        });
+
+
+                                        //convert hex to rgb
+                                        const rgbColor = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(document.getElementById('baseColor').value);
+                                        const rgbR = parseInt(rgbColor[1], 16);
+                                        const rgbG = parseInt(rgbColor[2], 16);
+                                        const rgbB = parseInt(rgbColor[3], 16);
+
+                                        hwv.model.setNodesFaceColor(currentNodes, new Communicator.Color(rgbR, rgbG, rgbB));
+
+                                        document.getElementById('baseColorValueOut').innerHTML = document.getElementById('baseColor').value;
+                                }
+
+                                function updateMetallicRoughness() {
+                                        const currentNodes = [];
+                                        hwv.selectionManager.getResults().forEach((item) => {
+                                                currentNodes.push(item.getNodeId());
+                                        })
+                                        hwv.model.setMetallicRoughness(currentNodes, parseFloat(document.getElementById('metallicValue').value), parseFloat(document.getElementById('roughnessValue').value));
+
+                                        document.getElementById('metalNote').innerHTML = '';
+                                }
+
+
+
+                                document.getElementById('iblEnv').onchange = () => {
+                                        const iblEnvironment = document.getElementById('iblEnv').value;
+                                        let iblFile;
+                                        hwv.view.setImageBasedLightingEnabled(true);
+                                        switch (iblEnvironment) {
+                                                case "warehouse":
+                                                        iblFile = './img/warehouse.ktx2';
+                                                        break;
+                                                case "field":
+                                                        iblFile = './img/hillside.ktx2';
+                                                        break;
+                                                case "studio":
+                                                        iblFile = './img/studio.ktx2';
+                                                        break;
+                                                case "hill":
+                                                        iblFile = './img/cape_hill.ktx2';
+                                                        break;
+
+
+                                                default:
+                                                        // unset the ibl lighting
+                                                        hwv.view.setImageBasedLightingEnabled(false);
+                                                        return;
+
+                                        }
+
+                                        setIblEnvironment(iblFile);
+
+
+
+
+                                }
+
+                                document.getElementById('iblIntensity').oninput = () => {
+                                        const iblIntensity = parseFloat(document.getElementById('iblIntensity').value);
+
+                                        hwv.view.setImageBasedLightingIntensity(iblIntensity);
+                                }
+
+                                document.getElementById('iblAnimate').onchange = () => {
+                                        document.getElementById('iblAnimate').checked ? animateIbl(true, iblAnimateSpeed) : animateIbl(false, iblAnimateSpeed);
+                                }
+
+                                document.getElementById('iblSpeed').oninput = () => {
+                                        iblAnimateSpeed = parseFloat(document.getElementById('iblSpeed').value);
+                                        animateIbl(false, iblAnimateSpeed);
+                                        if (document.getElementById('iblAnimate').checked) {
+                                                animateIbl(true, iblAnimateSpeed);
+                                        }
+                                        else {
+                                                animateIbl(false, iblAnimateSpeed);
+                                        }
+                                }
+
+
+
+                                const lightInputs = document.querySelectorAll(".lightProp");
+                                lightInputs.forEach((input) => {
+                                        input.onchange = (e) => {
+                                                //each time a light prop is changed, let's update the model lighting:
+                                                if (e.target.type === "checkbox") {
+                                                        const activeLights = document.querySelectorAll('.lightProp');
+
+                                                        activeLights.forEach((ele) => {
+                                                                ele.disabled = false;
+                                                                //limit to three selections by disabling inactive checkboxes:
+                                                                if (document.querySelectorAll('.lightProp:checked').length >= 3) {
+                                                                        if (!ele.checked && ele.type == "checkbox") {
+                                                                                ele.disabled = true;
+                                                                        }
+                                                                }
+                                                        });
+                                                        LightManager[e.target.id].on = e.target.checked;
+                                                }
+
+                                                else if (e.target.type === "color") {
+                                                        const hexLightColor = e.target.value;
+                                                        const rgbLight = hexToRgb(hexLightColor);
+                                                        const targetId = (e.target.id).replace('Color', '');
+                                                        LightManager[targetId].color = hexLightColor;
+                                                }
+
+                                                updateLights();
+                                        }
+                                });
+
+                                const lightSpaceInputs = document.getElementsByName('lightspace');
+                                lightSpaceInputs.forEach((space) => {
+                                        space.onchange = () => {
+                                                LightManager.cameraSpace = document.getElementById('cameraspace').checked;
+                                                updateLights();
+                                        }
+                                });
+
+                                const projectionInputs = document.getElementsByName('projection');
+                                projectionInputs.forEach((projectionStyle) => {
+                                        projectionStyle.onchange = () => {
+                                                document.getElementById('orthographic').checked ? hwv.view.setProjectionMode(Communicator.Projection.Orthographic) : hwv.view.setProjectionMode(Communicator.Projection.Perspective);
+                                        }
+                                });
+
+
+                                document.getElementById('showSimpleShadows').oninput = (e) => {
+                                        if (e.target.value == 0) {
+                                                hwv.view.setSimpleShadowEnabled(false);
+                                                shadows = false;
+                                                return;
+                                        }
+                                        else {
+                                                if (!shadows) {
+                                                        hwv.view.setSimpleShadowEnabled(true);
+                                                        shadows = true;
+                                                }
+                                                hwv.view.setSimpleShadowBlurSamples(parseInt(e.target.value));
+
+                                        }
+                                }
+
+                                document.getElementById('showSimpleReflection').oninput = (e) => {
+                                        if (e.target.value == 0) {
+                                                hwv.view.setSimpleReflectionEnabled(false);
+                                                reflection = false;
+                                                return;
+                                        }
+                                        else {
+                                                if (!reflection) {
+                                                        hwv.view.setSimpleReflectionEnabled(true);
+                                                        reflection = true;
+                                                }
+                                                hwv.view.setSimpleReflectionBlurSamples(parseInt(e.target.value));
+
+                                        }
+                                }
+
+                        }
+
+                        function hexToRgb(hexColor) {
+                                const rgbColor = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hexColor);
+                                const rgbR = parseInt(rgbColor[1], 16);
+                                const rgbG = parseInt(rgbColor[2], 16);
+                                const rgbB = parseInt(rgbColor[3], 16);
+                                return {
+                                        rgbR: rgbR,
+                                        rgbG: rgbG,
+                                        rgbB: rgbB
+                                }
+                        }
+
+                        function updateBackgroundColor() {
+                                const hexColorUpper = document.getElementById('upperBackgroundColor').value;
+                                const hexColorLower = document.getElementById('lowerBackgroundColor').value;
+
+                                const rgbColorUpper = hexToRgb(hexColorUpper);
+                                const rgbColorLower = hexToRgb(hexColorLower);
+
+                                hwv.view.setBackgroundColor(
+                                        new Communicator.Color(rgbColorUpper.rgbR, rgbColorUpper.rgbG, rgbColorUpper.rgbB),
+                                        new Communicator.Color(rgbColorLower.rgbR, rgbColorLower.rgbG, rgbColorLower.rgbB)
+                                );
+                        }
+
+                        async function setIblEnvironment(iblFile) {
+                                const iblData = await fetch(iblFile);
+                                if (iblData.ok) {
+                                        const blob = await iblData.blob();
+
+                                        const reader = new FileReader();
+
+                                        reader.onload = () => {
+                                                const byteArray = new Uint8Array(reader.result);
+                                                hwv.view.setImageBasedLightingEnvironment(byteArray);
+                                        };
+                                        reader.readAsArrayBuffer(blob);;
+                                }
+                        }
+
+                        function resetOps() {
+                                // reset all operators to be unselected
+
+                                //hide all pallets:
+                                const pallets = document.getElementsByClassName('pallet');
+                                const opButtons = document.getElementsByClassName('toolBtn');
+
+                                const palletsLength = pallets.length
+
+
+
+                                for (let i = 0; i < palletsLength; i++) {
+                                        pallets[i].style.display = 'none';
+                                        opButtons[i].classList.remove('activeBtn');
+                                };
+
+
+                                // reset the operator states:
+
+                                pbrOpActive = false;
+                                aOOpActive = false;
+                                backgroundOpActive = false;
+                                lightsOpActive = false;
+                                displayOpActive = false;
+                                iblEnvOpActive = false;
+
+                                setPbrOp(false);
+                        }
+
+                        const iblOrientation = {
+                                followViewAxes: true,
+                                matrix: Communicator.Matrix.yAxisRotation(0)
+                        };
+
+
+                        let animation;
+                        let angle = 0;
+
+                        function animateIbl(doAnimate, animateStep) {
+
+                                if (doAnimate) {
+                                        animation = setInterval(() => {
+                                                iblOrientation.matrix = Communicator.Matrix.yAxisRotation(angle)
+                                                hwv.view.setImageBasedLightingOrientation(iblOrientation);
+                                                angle = angle + animateStep;
+                                                if (angle == 360) {
+                                                        angle = 0;
+                                                }
+                                        }, 30);
+                                }
+
+                                else {
+                                        clearInterval(animation);
+                                        iblOrientation.matrix = Communicator.Matrix.yAxisRotation(angle);
+                                        hwv.view.setImageBasedLightingOrientation(iblOrientation);
+                                }
+                        }
+
+
+
+                        document.getElementById('handleButton').onclick = () => {
+                                if (!handleMode) {
+                                        hwv.operatorManager.push(handlesOp);
+                                        handleMode = true;
+                                        document.getElementById('toolbar').style.display = "none";
+                                        document.getElementById('handleButton').innerHTML = "Return";
+                                        document.getElementById('handleButtonNote').innerHTML = "Click a part in the model to move it.";
+                                }
+                                else {
+                                        hwv.operatorManager.remove(handlesOp);
+                                        handleMode = false;
+                                        document.getElementById('toolbar').style.display = "flex";
+                                        document.getElementById('handleButton').innerHTML = "Move";
+                                        document.getElementById('handleButtonNote').innerHTML = "";
+                                }
+
+                        }
+                }
+
+
+                class PbrOp {
+                        constructor(hwv) {
+                                this.hwv = hwv;
+                                this._multipleSelect = false;
+                                this._selectAll = false;
+                        }
+
+
+                        onKeyDown(event) {
+                                //on CTRL (keycode 17), activate multiple select
+                                if (event._keyCode == 17) {
+                                        this._multipleSelect = true;
+                                }
+
+                                if (event._keyCode == 65 && this._multipleSelect) {
+                                        this._selectAll = true;
+                                        hwv.selectionManager.selectNode(hwv.model.getAbsoluteRootNode());
+                                        return;
+
+                                }
+
+
+
+                        }
+
+                        onKeyUp(event) {
+                                if (event._keyCode == 17) {
+                                        this._multipleSelect = false;
+                                        this._selectAll = false;
+                                }
+
+                                if (event._keyCode == 65) {
+                                        this._selectAll = false;
+                                }
+                        }
+
+                        onMouseDown(event) {
+                                var config = new Communicator.PickConfig(Communicator.SelectionMask.Face | Communicator.SelectionMask.Line);
+
+                                // Clear the selection manager if we're not holding down Ctrl:
+                                if (!this._multipleSelect) {
+                                        hwv.selectionManager.clear();
+                                }
+
+                                hwv.view.pickFromPoint(event.getPosition(), config).then((selection) => {
+                                        if (selection.getNodeId() != null) {
+                                                hwv.selectionManager.add(selection);
+                                                const nodeId = selection.getNodeId();
+                                                //get the PBR items for the selection (for multiple selections, we'll be changing to the most recently selected item);
+                                                hwv.model.getNodesEffectiveFaceColor([nodeId]).then((res) => {
+                                                        let colorR = this.toHex(res[0].r);
+                                                        let colorG = this.toHex(res[0].g);
+                                                        let colorB = this.toHex(res[0].b);
+
+                                                        let hexColor = "#" + colorR + colorG + colorB;
+
+                                                        document.getElementById('baseColor').value = hexColor;
+
+                                                        document.getElementById('baseColorValueOut').innerHTML = hexColor;
+
+                                                });
+
+                                                hwv.model.getMetallicRoughness([nodeId]).then((res) => {
+
+                                                        if (res[0] === null) {
+                                                                console.log('metal roughness not defined');
+                                                                document.getElementById('metalNote').innerHTML = 'This has not yet been defined:'
+                                                        }
+                                                        else {
+                                                                document.getElementById('metallicValue').value = res[0].metallic;
+                                                                document.getElementById('roughnessValue').value = res[0].roughness;
+                                                                document.getElementById('metalNote').innerHTML = '';
+                                                        }
+                                                });
+                                        }
+                                });
+                        }
+
+                        toHex(val) {
+                                let result = val.toString(16);
+                                return result.length == 1 ? "0" + result : result;
+                        }
+                }
+
+                function loadImageBasedLighting() {
+                        const file = document.querySelector('input[type=file]').files[0];
+                        const reader = new FileReader();
+
+                        reader.addEventListener("load", () => {
+                                const byteArray = new Uint8Array(reader.result);
+                                setImageBasedLighting(byteArray);
+                        });
+                        reader.readAsArrayBuffer(file);
+                }
+
+
+                /*async function loadImage(filename) {
+                        const p = new Promise((resolve, reject) => {
+                                const request = new XMLHttpRequest();
+                                request.open(`GET`, filename, true);
+                                request.responseType = `arraybuffer`;
+                                request.onload = function () {
+                                        if (request.readyState === 4) {
+                                                if (request.status === 200) {
+                                                        resolve(request);
+                                                }
+                                        }
+                                };
+                                request.onerror = function (event) {
+                                        reject(event);
+                                };
+                                request.send();
+                        });
+                        const request = await p;
+                        const imageOptions = {
+                                format: Communicator.ImageFormat.Png,
+                                data: new Uint8Array(request.response),
+                        };
+                        return hwv.model.createImage(imageOptions);
+                }
+        
+             */
+
+                /*async function setWood() { // will need to create texture coordinates: https://docs.techsoft3d.com/communicator/latest/prog_guide/viewing/model_attributes/materials/textures.html#creating-and-assigning-a-texture-to-a-node
+                        const textureMatrix = new Communicator.Matrix();
+                        textureMatrix.setScaleComponent(100,100,100);
+                        const woodImageId = await loadImage("textures/wood_xs.png");
+                        
+                        hwv.model.unset
+                        hwv.model.setNodesTexture([919], {imageId: woodImageId, matrix: textureMatrix});
+                }*/
+
+        </script>
+
+</body>
+
+</html>
